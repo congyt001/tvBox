@@ -14,6 +14,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # 安装Python3（Chaquopy依赖）
+      - name: Install Python3
+        run: |
+          sudo apt update
+          sudo apt install -y python3 python3-pip
+          echo "PYTHON=$(which python3)" >> $GITHUB_ENV
+
       # 手动安装Android CommandLineTools
       - name: Install Android SDK cmdline tools
         run: |
@@ -34,10 +41,11 @@ jobs:
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
 
+      # 编译，同时传递python路径给chaquopy
       - name: Build With Gradle
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --build-cache --parallel --daemon
+          ./gradlew assembleDebug -PbuildPython=${{ env.PYTHON }} --build-cache --parallel --daemon
 
       - name: Prepare App
         run: |
