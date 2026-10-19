@@ -1,6 +1,7 @@
 name: Test Build
 on:
-  workflow_dispatch: # 仅手动点击按钮运行
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,7 +20,7 @@ jobs:
             mv "$file" ${{ github.workspace }}/apk/
           done
       - name: Upload App To Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: com.github.tvbox.osc
           path: ${{ github.workspace }}/apk/*
