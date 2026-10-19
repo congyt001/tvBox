@@ -1,12 +1,6 @@
 name: Test Build
-
 on:
-#  push:
-#    branches:
-#      - main
-#  pull_request:
-  workflow_dispatch:
-
+  workflow_dispatch: # 仅手动点击按钮运行
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,7 +11,7 @@ jobs:
       - name: Build With Gradle
         run: |
           chmod +x gradlew
-          ./gradlew assemblerelease --build-cache --parallel --daemon --warning-mode all
+          ./gradlew assembleDebug --build-cache --parallel --daemon --warning-mode all
       - name: Prepare App
         run: |
           mkdir -p ${{ github.workspace }}/apk/
