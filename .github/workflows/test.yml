@@ -41,11 +41,16 @@ jobs:
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
 
-      # 编译，同时传递python路径给chaquopy
+      # 【修复】强制替换buildPython为linux的python3路径
+      - name: Fix Chaquopy buildPython
+        run: |
+          PY3=$(which python3)
+          sed -i "s|^.*buildPython.*$|buildPython = \"$PY3\"|" pyramid/build.gradle
+
       - name: Build With Gradle
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug -PbuildPython=${{ env.PYTHON }} --build-cache --parallel --daemon
+          ./gradlew assembleDebug --build-cache --parallel --daemon
 
       - name: Prepare App
         run: |
