@@ -6,19 +6,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
         with:
-          fetch-depth: 0
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 下载Android SDK，生成 local.properties
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Generate local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > tvBox/local.properties
+
       - name: Build With Gradle
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --build-cache --parallel --daemon --warning-mode all
+          ./gradlew assembleDebug --build-cache --parallel --daemon
+
       - name: Prepare App
         run: |
           mkdir -p ${{ github.workspace }}/apk/
-          for file in `find ~ -name "*.apk" -print`; do
-            mv "$file" ${{ github.workspace }}/apk/
-          done
+          find . -name "*.apk" -exec cp {} ${{ github.workspace }}/apk/ \;
+
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v4
         with:
