@@ -26,13 +26,13 @@ jobs:
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
           echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
           echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
-          # 接受协议，安装platforms、build-tools
           yes | sdkmanager --licenses
           sdkmanager "platforms;android-33" "build-tools;33.0.2"
 
+      # 直接在仓库根目录生成 local.properties
       - name: Generate local.properties
         run: |
-          echo "sdk.dir=$ANDROID_HOME" > tvBox/local.properties
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Build With Gradle
         run: |
